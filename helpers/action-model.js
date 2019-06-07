@@ -8,7 +8,8 @@ module.exports = {
     findById,
     insert,
     remove,
-    update
+    update, 
+    getActionById 
 }
 
 function find(){
@@ -50,3 +51,16 @@ function remove(id) {
         });
 }
 
+function getActionContext(id){
+    return db('context')
+        .where('actions_context.action_id', id)
+        .join('actions_context', 'actions_context.context_id','context.id')
+}
+
+async function getActionById(id){
+    let action = await db('actions')
+        .where({ id })
+        .first()
+     let context = await getActionContext(id)
+        return {...action, context}
+}

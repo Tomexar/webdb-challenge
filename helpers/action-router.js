@@ -55,6 +55,19 @@ router.put('/:id', (req, res) => {
       });
   });
   
-
+  router.get('/context/:id', (req, res)=>{
+    Actions.getActionById(req.params.id)
+      .then(action =>{
+        if (action){
+          res.status(200).json(action);
+        }else {
+          res.status(404).json({ message: 'action not found'})
+        }
+      })
+      .catch(err =>{
+        res.status(500).json(err)
+      })
+  })
+  
 
 module.exports = router;
