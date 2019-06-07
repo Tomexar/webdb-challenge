@@ -20,7 +20,12 @@ async function findById(id) {
         .where({ id })
         .first()
     let actions = await getProjectActions(id)
-    return { ...project, actions }
+    if (project){
+       return { ...project, actions } 
+    }else {
+        return null
+    }
+    
 }
 
 
