@@ -7,37 +7,51 @@ module.exports = {
     find,
     findById,
     insert,
-    remove
+    remove,
+    update
 }
 
-function find(){
-    return db ('projects')
+function find() {
+    return db('projects')
 }
 
-async function findById(id){
+async function findById(id) {
     let project = await db('projects')
         .where({ id })
         .first()
     let actions = await getProjectActions(id)
-        return {...project, actions}
+    return { ...project, actions }
 }
 
 
-function getProjectActions(project_id){
+function getProjectActions(project_id) {
     return db('actions')
-        .where({ project_id})
+        .where({ project_id })
 }
 
-function insert(project){
+function insert(project) {
     return db('projects')
         .insert(project, "id")
-        .then(([id])=> {
+        .then(([id]) => {
             return findById(id)
         })
 }
 
 function remove(id) {
-    return db('hubs')
-      .where({ id })
-      .del();
-  }
+    return db('projects')
+        .where({ id })
+        .del();
+}
+
+function update(id, changes) {
+    return db('projects')
+        .where({ id })
+        .update(changes)
+        .then(count => {
+            if (count > 0) {
+                return findById(id);
+            } else {
+                return null;
+            }
+        });
+}

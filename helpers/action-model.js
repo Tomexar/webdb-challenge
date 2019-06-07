@@ -6,7 +6,9 @@ db = knex(knexConfig.development)
 module.exports = {
     find,
     findById,
-    insert
+    insert,
+    remove,
+    update
 }
 
 function find(){
@@ -26,5 +28,25 @@ function insert(action){
     .then(([id])=>{ 
         return findById(id)
     })
+}
+
+function remove(id) {
+    return db('actions')
+      .where({ id })
+      .del();
+  }
+
+
+  function update(id, changes) {
+    return db('actions')
+        .where({ id })
+        .update(changes)
+        .then(count => {
+            if (count > 0) {
+                return findById(id);
+            } else {
+                return null;
+            }
+        });
 }
 
